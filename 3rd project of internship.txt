@@ -1,0 +1,106 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+void compress(const string& inputFile, const string& outputFile) {
+    ifstream inFile(inputFile);
+    ofstream outFile(outputFile);
+
+    if (!inFile) {
+        cerr << "Error opening input file." << endl;
+        return;
+    }
+    
+    if (!outFile) {
+        cerr << "Error creating output file." << endl;
+        return;
+    }
+
+    char currentChar;
+    char lastChar = '\0';
+    int count = 0;
+
+    while (inFile.get(currentChar)) {
+        if (currentChar == lastChar) {
+            count++;
+        } else {
+            if (count > 0) {
+                outFile << count << lastChar;
+            }
+            lastChar = currentChar;
+            count = 1;
+        }
+    }
+    // Write the last run
+    if (count > 0) {
+        outFile << count << lastChar;
+    }
+
+    inFile.close();
+    outFile.close();
+}
+
+void decompress(const string& inputFile, const string& outputFile) {
+    ifstream inFile(inputFile);
+    ofstream outFile(outputFile);
+
+    if (!inFile) {
+        cerr << "Error opening input file." << endl;
+        return;
+    }
+    
+    if (!outFile) {
+        cerr << "Error creating output file." << endl;
+        return;
+    }
+
+    int count = 0;
+    char currentChar;
+
+    while (inFile >> count >> currentChar) {
+        for (int i = 0; i < count; ++i) {
+            outFile << currentChar;
+        }
+    }
+
+    inFile.close();
+    outFile.close();
+}
+
+int main() {
+    string inputFile, outputFile; // Change 'string' to 'std::string'
+    int choice;
+
+    cout << "File Compression Tool\n";
+    cout << "1. Compress\n";
+    cout << "2. Decompress\n";
+    cout << "Choose an option (1/2): ";
+    cin >> choice;
+
+    cout << "Enter input file name: ";
+    cin >> inputFile;
+    cout << "Enter output file name: ";
+    cin >> outputFile;
+
+    if (choice == 1) {
+        compress(inputFile, outputFile);
+        cout << "File compressed successfully." << endl;
+    } else if (choice == 2) {
+        decompress(inputFile, outputFile);
+        cout << "File decompressed successfully." << endl;
+    } else {
+        cerr << "Invalid choice." << endl;
+    }
+
+    return 0;
+}
